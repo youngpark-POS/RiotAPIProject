@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.urls import reverse
 
-from .riotapi import get_puuid, get_match_ids, get_single_match, get_champion_mastery
+from .riotapi import *
 from pprint import pprint
 
 # Create your views here.
@@ -27,11 +27,13 @@ def detail(request, nickname_and_tag):
 
     puuid = get_puuid(nickname, tag)
     match_ids = get_match_ids(puuid)
+    summid = get_summoner_id_encrypted(puuid)
+    rank_info = get_rank_info(summid)
 
     context = {
         "nickname_and_tag": nickname_and_tag,
-        "current_rank" : "",
-        "current_LP" : "",
+        "current_rank" : " ".join([rank_info["tier"], rank_info["rank"]]),
+        "current_LP" : str(rank_info["leaguePoints"]) + ("" if rank_info["tier"] == "Unranked" else "LP"),
         "match_list": [],
         "mastery_list": [],
     }

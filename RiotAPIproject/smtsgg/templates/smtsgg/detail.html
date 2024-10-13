@@ -64,7 +64,7 @@
         <h1 class="title">ShowMeTheSummoner.gg</h1>
         <div class="player-info">
             <h2>Player Name: {{ nickname_and_tag }}</h2>
-            <h3>Rank: {{ }}</h3>
+            <h3>Rank: {{ current_rank }} {{ current_LP }}</h3>
         </div>
 
         <div class="text-center mb-4">
@@ -110,126 +110,18 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for match in match_list %}
                         <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Ahri"> Ahri</td>
-                            <td>2024-10-01 12:34</td>
+                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Ahri"> {{ match.champion }}</td>
+                            <td>{{ match.game_endtime }}</td>
+                            {% if match.win %}
                             <td>Victory</td>
-                            <td>10/5/7</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Yasuo"> Yasuo</td>
-                            <td>2024-10-02 14:20</td>
+                            {% else %}
                             <td>Defeat</td>
-                            <td>2/8/3</td>
+                            {% endif %}
+                            <td>{{ match.kills }}/{{ match.deaths }}/{{ match.assists }}</td>
                         </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lee Sin"> Lee Sin</td>
-                            <td>2024-10-03 16:45</td>
-                            <td>Victory</td>
-                            <td>15/3/10</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Jhin"> Jhin</td>
-                            <td>2024-10-04 11:15</td>
-                            <td>Victory</td>
-                            <td>5/2/8</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lux"> Lux</td>
-                            <td>2024-10-05 09:30</td>
-                            <td>Defeat</td>
-                            <td>1/6/4</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Ahri"> Ahri</td>
-                            <td>2024-10-06 19:25</td>
-                            <td>Victory</td>
-                            <td>9/4/5</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Yasuo"> Yasuo</td>
-                            <td>2024-10-07 20:10</td>
-                            <td>Victory</td>
-                            <td>12/1/6</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lee Sin"> Lee Sin</td>
-                            <td>2024-10-08 15:00</td>
-                            <td>Defeat</td>
-                            <td>0/10/2</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Jhin"> Jhin</td>
-                            <td>2024-10-09 18:30</td>
-                            <td>Victory</td>
-                            <td>7/3/9</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lux"> Lux</td>
-                            <td>2024-10-10 21:00</td>
-                            <td>Victory</td>
-                            <td>4/2/7</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Ahri"> Ahri</td>
-                            <td>2024-10-11 10:15</td>
-                            <td>Defeat</td>
-                            <td>3/5/4</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Yasuo"> Yasuo</td>
-                            <td>2024-10-12 13:30</td>
-                            <td>Victory</td>
-                            <td>8/0/6</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lee Sin"> Lee Sin</td>
-                            <td>2024-10-13 14:45</td>
-                            <td>Defeat</td>
-                            <td>2/9/3</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Jhin"> Jhin</td>
-                            <td>2024-10-14 16:00</td>
-                            <td>Victory</td>
-                            <td>10/5/8</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lux"> Lux</td>
-                            <td>2024-10-15 12:30</td>
-                            <td>Victory</td>
-                            <td>14/3/5</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Ahri"> Ahri</td>
-                            <td>2024-10-16 11:20</td>
-                            <td>Defeat</td>
-                            <td>1/4/2</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Yasuo"> Yasuo</td>
-                            <td>2024-10-17 19:10</td>
-                            <td>Victory</td>
-                            <td>6/2/6</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lee Sin"> Lee Sin</td>
-                            <td>2024-10-18 20:05</td>
-                            <td>Defeat</td>
-                            <td>2/8/4</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Jhin"> Jhin</td>
-                            <td>2024-10-19 14:30</td>
-                            <td>Victory</td>
-                            <td>11/4/7</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lux"> Lux</td>
-                            <td>2024-10-20 13:15</td>
-                            <td>Victory</td>
-                            <td>5/3/9</td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

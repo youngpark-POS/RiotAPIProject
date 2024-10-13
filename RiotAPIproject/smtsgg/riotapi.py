@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+from datetime import datetime as dt
 from . import config as conf
 
 from pprint import pprint
@@ -19,13 +20,13 @@ def get_puuid(userName, tagLine):
     else:
         return None
     
-def get_summoner_info(puuid):
+def get_summoner_id_encrypted(puuid):
     query_url = "/".join([API_BASE_URL_KR, f"lol/summoner/v4/summoners/by-puuid/{puuid}"])
 
     response = requests.get(query_url, headers=conf.header_content)
 
     if response.status_code == 200:
-        return response.json()
+        return response.json()["id"]
     else:
         return None
 
@@ -56,6 +57,7 @@ def get_single_match(match_id, puuid):
                 break
         infos_used = {
             "game_duration": minfo["info"]["gameDuration"],
+            "game_endtime": dt.fromtimestamp(minfo["info"]["gameEndTimestamp"] / 1000).strftime("%Y/%m/%d %H:%M:%S"),
             "mapId": minfo["info"]["mapId"],
             "gameMode": minfo["info"]["gameMode"],
             "kills": target_player["kills"],
@@ -87,5 +89,32 @@ def get_champion_mastery(puuid):
                 }
                 infos_used.append(single_mastery)
         return infos_used
+    else:
+        return None
+    
+def get_rank_info(summid):
+    query_url = "/".join([API_BASE_URL_KR, f"lol/league/v4/entries/by-summoner/{summid}"])
+
+    response = requests.get(query_url, headers=conf.header_content)
+
+    if response.status_code == 200:
+        target_player = None
+        for p in response.json():
+            if p["summonerId"] == summid:
+                target_player = p
+                break
+        if target_player is None:
+            infos = {
+                "tier": "Unranked",
+                "rank": "",
+                "leaguePoints": ""
+            }
+        else:
+            infos = {
+                "tier": target_player["tier"],
+                "rank": target_player["rank"],
+                "leaguePoints": target_player["leaguePoints"]
+            }
+        return infos
     else:
         return None
