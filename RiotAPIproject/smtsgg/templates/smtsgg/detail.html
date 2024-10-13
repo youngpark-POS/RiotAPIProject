@@ -63,8 +63,8 @@
     <main class="container mt-4">
         <h1 class="title">ShowMeTheSummoner.gg</h1>
         <div class="player-info">
-            <h2>Player Name: Rioter#123</h2>
-            <h3>Rank: Platinum 2</h3>
+            <h2>Player Name: {{ nickname_and_tag }}</h2>
+            <h3>Rank: {{ }}</h3>
         </div>
 
         <div class="text-center mb-4">
@@ -88,26 +88,12 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for mastery in mastery_list %}
                         <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Ahri"> Ahri</td>
-                            <td>15000</td>
+                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt={{ mastery.championName }}>{{ mastery.championName }}</td>
+                            <td>{{ mastery.championPoints }}</td>
                         </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Yasuo"> Yasuo</td>
-                            <td>12000</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lee Sin"> Lee Sin</td>
-                            <td>11000</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Jhin"> Jhin</td>
-                            <td>9000</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Lux"> Lux</td>
-                            <td>8500</td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

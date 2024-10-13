@@ -1,6 +1,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,django
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode,django
 
+### misc ###
+
+*.pptx
+personal_test
+
 ### Django ###
 *.log
 *.pot
