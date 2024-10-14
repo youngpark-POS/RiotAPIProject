@@ -6,7 +6,16 @@ from django.urls import reverse
 from .riotapi import *
 from pprint import pprint
 
-# Create your views here.
+'''
+
+TODOs 
+
+Display all ranks, not just flex rank
+Introduce error handling process
+Introduce champion portrait
+
+'''
+
 
 def index(request):
     return render(request, "smtsgg/index.html")

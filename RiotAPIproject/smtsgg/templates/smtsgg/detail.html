@@ -88,9 +88,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% load static %}
                         {% for mastery in mastery_list %}
                         <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt={{ mastery.championName }}>{{ mastery.championName }}</td>
+                            <td><img src={% static "champion_portrait/"|add:mastery.championName|add:".png"  %} class="champion-img" alt={{ mastery.championName }}></td>
                             <td>{{ mastery.championPoints }}</td>
                         </tr>
                         {% endfor %}
@@ -112,7 +113,7 @@
                     <tbody>
                         {% for match in match_list %}
                         <tr>
-                            <td><img src="https://via.placeholder.com/50" class="champion-img" alt="Ahri"> {{ match.champion }}</td>
+                            <td><img src={% static "champion_portrait/"|add:match.champion|add:".png"  %} class="champion-img" alt={{ match.champion }}></td>
                             <td>{{ match.game_endtime }}</td>
                             {% if match.win %}
                             <td>Victory</td>
