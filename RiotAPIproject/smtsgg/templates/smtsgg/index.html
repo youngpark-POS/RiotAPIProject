@@ -55,11 +55,12 @@
     <main class="container mt-4">
         <h1 class="title">ShowMeTheSummoner.gg</h1>
         <div class="text-center">
-            <form action={% url "smtsgg:search" %} method="get">
+            <form action={% url "smtsgg:search" %} method="post">
+                {% csrf_token %}
                 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
                 <div class="mb-3">
-                    <label for="playerName" class="form-label">Enter Summoner Name & Tag</label>
+                    <label for="playerName" class="form-label">Enter Summoner Name and Tag</label>
                     <input type="text" class="form-control" name="playerName" id="playerName" placeholder="Enter Summoner Name & Tag (e.g. Rioter#123)" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>

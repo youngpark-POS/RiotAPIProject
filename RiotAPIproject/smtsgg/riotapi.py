@@ -14,7 +14,6 @@ def get_puuid(userName, tagLine):
     query_url = "/".join([API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-riot-id/{userName}/{tagLine}"])
 
     response = requests.get(query_url, headers=conf.header_content)
-
     if response.status_code == 200:
         return response.json()["puuid"]
     elif response.status_code == 404:  # user not existed
@@ -45,7 +44,7 @@ def get_match_ids(puuid):
         return None
 
 #  returns match information given match ID and puuid
-def get_single_match(match_id, puuid):
+def get_match_for_single_player(match_id, puuid):
 
     query_url = "/".join([API_BASE_URL_ASIA, f"lol/match/v5/matches/{match_id}"])
 
@@ -58,6 +57,7 @@ def get_single_match(match_id, puuid):
                 target_player = p
                 break
         infos_used = {
+            "matchId": minfo["metadata"]["matchId"],
             "game_duration": minfo["info"]["gameDuration"],
             "game_endtime": dt.fromtimestamp(minfo["info"]["gameEndTimestamp"] / 1000).strftime("%Y/%m/%d %H:%M:%S"),
             "mapId": minfo["info"]["mapId"],
@@ -139,3 +139,37 @@ def get_rank_info(summid):
                 }
 
     return infos
+
+def get_match_detail(match_id):
+    query_url = "/".join([API_BASE_URL_ASIA, f"lol/match/v5/matches/{match_id}"])
+
+    response = requests.get(query_url, headers=conf.header_content)
+
+    if response.status_code == 200:
+        minfo = response.json()
+
+        game_info = {
+            "game_duration": minfo["info"]["gameDuration"],
+            "game_endtime": dt.fromtimestamp(minfo["info"]["gameEndTimestamp"] / 1000).strftime("%Y/%m/%d %H:%M:%S"),
+            "mapId": minfo["info"]["mapId"],
+            "gameMode": minfo["info"]["gameMode"],
+        }
+
+        lane2idx = {"top": 0, "jgl": 1, "mid": 2, "bot": 3, "sup": 4}
+        winning_team = [None*5]
+        losing_team = [None*5]
+        for player in minfo["info"]["participants"]:
+            target_dict = winning_team if player["win"] else losing_team
+            target_dict[lane2idx[player["lane"]]] = {
+                "champion": player["championName"],
+                "kills": player["kills"],
+                "deaths": player["deaths"],
+                "assists": player["assists"],
+                "goldEarned": player["goldEarned"],
+                "cs": player["totalMinionsKilled"],
+                "lane": player["lane"],
+                "name": player["summonerName"],
+                "items": {i: player[f"item{i}"] for i in range(7)},
+                "damage2champ": player["totalDamageDealtToChampions"],
+            }
+    return [game_info, winning_team, losing_team]

@@ -19,7 +19,7 @@ def index(request):
     return render(request, "smtsgg/index.html")
 
 def search(request):
-    nickname, tag = request.GET.get("playerName").split("#")
+    nickname, tag = request.POST.get("playerName").split("#")
     try:
         puuid = get_puuid(nickname, tag)
         return redirect("smtsgg:detail", "#".join([nickname, tag]))
@@ -48,8 +48,17 @@ def detail(request, nickname_and_tag):
     }
 
     for mid in match_ids:
-        context["match_list"].append(get_single_match(mid, puuid))
+        context["match_list"].append(get_match_for_single_player(mid, puuid))
 
     context["mastery_list"] = get_champion_mastery(puuid)
 
     return render(request, "smtsgg/detail.html", context=context)
+
+def match_detail(request, match_id):
+    match_infos = get_match_detail(match_id)
+    context = {
+        "game_info": match_infos["game_info"],
+        "winning_team": match_infos["winning_team"],
+        "losing_team": match_infos["losing_team"],
+    }
+    return render(request, "smtsgg/match_detail.html", context=context)

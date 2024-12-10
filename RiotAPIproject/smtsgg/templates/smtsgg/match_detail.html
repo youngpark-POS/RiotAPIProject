@@ -1,0 +1,65 @@
+<div class="container mt-4">
+    <h2 class="text-center">Match Details</h2>
+
+    <!-- Winning Team -->
+    <h3 class="text-success text-center mt-4">Winning Team</h3>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Player</th>
+                <th>Champion</th>
+                <th>K/D/A</th>
+                <th>Gold</th>
+                <th>CS</th>
+                <th>Damage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in winning_team %}
+            <tr>
+                <td>{{ player.name }}</td>
+                <td>
+                    <img src="{% static 'champion_portrait/'|add:player.champion|add:'.png' %}" 
+                         class="champion-img" 
+                         alt="{{ player.champion }}">
+                    {{ player.champion }}
+                </td>
+                <td>{{ player.kills }}/{{ player.deaths }}/{{ player.assists }}</td>
+                <td>{{ player.goldEarned }}</td>
+                <td>{{ player.cs }}</td>
+                <td>{{ player.damage2champ }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Losing Team -->
+    <h3 class="text-danger text-center mt-4">Losing Team</h3>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Player</th>
+                <th>Champion</th>
+                <th>K/D/A</th>
+                <th>Gold</th>
+                <th>CS</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in losing_team %}
+            <tr>
+                <td>{{ player.name }}</td>
+                <td>
+                    <img src="{% static 'champion_portrait/'|add:player.champion|add:'.png' %}" 
+                         class="champion-img" 
+                         alt="{{ player.champion }}">
+                    {{ player.champion }}
+                </td>
+                <td>{{ player.kills }}/{{ player.deaths }}/{{ player.assists }}</td>
+                <td>{{ player.goldEarned }}</td>
+                <td>{{ player.cs }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
