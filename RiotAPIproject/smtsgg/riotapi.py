@@ -17,8 +17,10 @@ def get_puuid(userName, tagLine):
 
     if response.status_code == 200:
         return response.json()["puuid"]
-    else:
-        return None
+    elif response.status_code == 404:  # user not existed
+        raise KeyError("Username and tag not found")
+    else:  # API error or else
+        raise Exception("Unknown Error")
     
 def get_summoner_id_encrypted(puuid):
     query_url = "/".join([API_BASE_URL_KR, f"lol/summoner/v4/summoners/by-puuid/{puuid}"])
@@ -28,7 +30,7 @@ def get_summoner_id_encrypted(puuid):
     if response.status_code == 200:
         return response.json()["id"]
     else:
-        return None
+        return ""
 
     
 def get_match_ids(puuid):
@@ -66,9 +68,19 @@ def get_single_match(match_id, puuid):
             "win": target_player["win"],
             "champion": target_player["championName"],
         }
-        return infos_used
     else:
-        return None
+        infos_used = {
+            "game_duration": 0,
+            "game_endtime": 0,
+            "mapId": 0,
+            "gameMode": "None",
+            "kills": 0,
+            "assists": 00,
+            "deaths": 0,
+            "win": False,
+            "champion": "None",
+        }
+    return infos_used
 
 #  returns the list of top 5 champion mastery
 def get_champion_mastery(puuid):
@@ -97,24 +109,33 @@ def get_rank_info(summid):
 
     response = requests.get(query_url, headers=conf.header_content)
 
+    infos = {
+        "solo": {
+            "tier": "Unranked",
+            "rank": "",
+            "leaguePoints": 0
+        },
+        "flex": {
+            "tier": "Unranked",
+            "rank": "",
+            "leaguePoints": 0
+        },
+    }
+
     if response.status_code == 200:
-        target_player = None
-        for p in response.json():
-            if p["summonerId"] == summid:
-                target_player = p
-                break
-        if target_player is None:
-            infos = {
-                "tier": "Unranked",
-                "rank": "",
-                "leaguePoints": ""
-            }
-        else:
-            infos = {
-                "tier": target_player["tier"],
-                "rank": target_player["rank"],
-                "leaguePoints": target_player["leaguePoints"]
-            }
-        return infos
-    else:
-        return None
+
+        for league in response.json():
+            if "SR" in league["queueType"]:
+                infos["solo"] = {
+                    "tier": league["tier"],
+                    "rank": league["rank"],
+                    "leaguePoints": "" if league["tier"] == "Unranked" else league["leaguePoints"]
+                }
+            elif "5x5" in league["queueType"]:
+                infos["flex"] = {
+                    "tier": league["tier"],
+                    "rank": league["rank"],
+                    "leaguePoints": "" if league["tier"] == "Unranked" else league["leaguePoints"]
+                }
+
+    return infos

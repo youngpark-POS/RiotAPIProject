@@ -29,7 +29,7 @@
             margin: 20px 0;
         }
         .champion-img {
-            width: 50px; /* 이미지 크기 조절 */
+            width: 50px;
             height: 50px;
         }
     </style>
@@ -64,14 +64,15 @@
         <h1 class="title">ShowMeTheSummoner.gg</h1>
         <div class="player-info">
             <h2>Player Name: {{ nickname_and_tag }}</h2>
-            <h3>Rank: {{ current_rank }} {{ current_LP }}</h3>
+            <h3>Solo Rank: {{ current_rank_solo }} {{ current_LP_solo }}</h3>
+            <h3>Flex Rank: {{ current_rank_flex }} {{ current_LP_flex }}</h3>
         </div>
 
         <div class="text-center mb-4">
-            <form>
+            <form action={% url "smtsgg:search" %} method="get">
                 <div class="mb-3">
                     <label for="newPlayerName" class="form-label">Enter Player Name</label>
-                    <input type="text" class="form-control" id="newPlayerName" placeholder="Player Name" required>
+                    <input type="text" class="form-control" name="playerName" id="newPlayerName" placeholder="Player Name & Tag" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -84,7 +85,8 @@
                     <thead>
                         <tr>
                             <th>Champion</th>
-                            <th>Mastery Points</th>
+                            <th>Levels</th>
+                            <th>Points</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,6 +94,7 @@
                         {% for mastery in mastery_list %}
                         <tr>
                             <td><img src={% static "champion_portrait/"|add:mastery.championName|add:".png"  %} class="champion-img" alt={{ mastery.championName }}></td>
+                            <td>{{ mastery.championLevel }}</td>
                             <td>{{ mastery.championPoints }}</td>
                         </tr>
                         {% endfor %}
@@ -105,6 +108,7 @@
                     <thead>
                         <tr>
                             <th>Champion</th>
+                            <th>Gamemode</th>
                             <th>Date</th>
                             <th>Result</th>
                             <th>K/D/A</th>
@@ -114,6 +118,7 @@
                         {% for match in match_list %}
                         <tr>
                             <td><img src={% static "champion_portrait/"|add:match.champion|add:".png"  %} class="champion-img" alt={{ match.champion }}></td>
+                            <td>{{ match.gameMode }}</td>
                             <td>{{ match.game_endtime }}</td>
                             {% if match.win %}
                             <td>Victory</td>

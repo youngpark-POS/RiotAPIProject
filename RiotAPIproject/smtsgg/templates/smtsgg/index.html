@@ -55,8 +55,7 @@
     <main class="container mt-4">
         <h1 class="title">ShowMeTheSummoner.gg</h1>
         <div class="text-center">
-            <form action={% url "smtsgg:search" %} method="post">
-                {% csrf_token %}
+            <form action={% url "smtsgg:search" %} method="get">
                 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
                 <div class="mb-3">

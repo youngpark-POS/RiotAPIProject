@@ -10,9 +10,7 @@ from pprint import pprint
 
 TODOs 
 
-Display all ranks, not just flex rank
 Introduce error handling process
-Introduce champion portrait
 
 '''
 
@@ -21,15 +19,15 @@ def index(request):
     return render(request, "smtsgg/index.html")
 
 def search(request):
-    nickname, tag = request.POST["playerName"].split("#")
-
-    puuid = get_puuid(nickname, tag)
-    # get user info from API query
-
-    if puuid is None:
-        raise Http404("Summoner name not found, or just API key expiration")
-    else:
+    nickname, tag = request.GET.get("playerName").split("#")
+    try:
+        puuid = get_puuid(nickname, tag)
         return redirect("smtsgg:detail", "#".join([nickname, tag]))
+    # get user info from API query
+    except KeyError:
+        raise Http404("Summoner name not found")
+    except Exception:
+        raise Http404("Unknown error")
 
 def detail(request, nickname_and_tag):
     nickname, tag = nickname_and_tag.split("#")
@@ -41,8 +39,10 @@ def detail(request, nickname_and_tag):
 
     context = {
         "nickname_and_tag": nickname_and_tag,
-        "current_rank" : " ".join([rank_info["tier"], rank_info["rank"]]),
-        "current_LP" : str(rank_info["leaguePoints"]) + ("" if rank_info["tier"] == "Unranked" else "LP"),
+        "current_rank_solo" : " ".join([rank_info["solo"]["tier"], rank_info["solo"]["rank"]]),
+        "current_LP_solo" : str(rank_info["solo"]["leaguePoints"]) + ("" if rank_info["solo"]["tier"] == "Unranked" else "LP"),
+        "current_rank_flex" : " ".join([rank_info["flex"]["tier"], rank_info["flex"]["rank"]]),
+        "current_LP_flex" : str(rank_info["flex"]["leaguePoints"]) + ("" if rank_info["flex"]["tier"] == "Unranked" else "LP"),
         "match_list": [],
         "mastery_list": [],
     }
