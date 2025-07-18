@@ -3,12 +3,13 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from django.urls import reverse
 
+from .models import SearchCount
 from .riotapi import *
 from pprint import pprint
 
 '''
 
-TODOs 
+TODOs
 
 Introduce error handling process
 
@@ -20,8 +21,18 @@ def index(request):
 
 def search(request):
     nickname, tag = request.POST.get("playerName").split("#")
+    tag = "KR1" if tag == "" else tag
     try:
         puuid = get_puuid(nickname, tag)
+        # record_list = SearchCount.objects.filter(puuid=puuid)
+        # if len(record_list) == 0:
+        #     new_record = SearchCount(puuid=puuid, gamename=nickname, tagline=tag)
+        #     new_record.save()
+        # else:
+        #     record = record_list[0]
+        #     record.count += 1
+        #     record.save()
+
         return redirect("smtsgg:detail", "#".join([nickname, tag]))
     # get user info from API query
     except KeyError:
@@ -34,8 +45,7 @@ def detail(request, nickname_and_tag):
 
     puuid = get_puuid(nickname, tag)
     match_ids = get_match_ids(puuid)
-    summid = get_summoner_id_encrypted(puuid)
-    rank_info = get_rank_info(summid)
+    rank_info = get_rank_info(puuid)
 
     context = {
         "nickname_and_tag": nickname_and_tag,

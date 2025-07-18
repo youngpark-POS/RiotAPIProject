@@ -17,7 +17,7 @@ djangoenv
 
 config.py
 admin.py
-settings.py
+secret.json
 
 media
 

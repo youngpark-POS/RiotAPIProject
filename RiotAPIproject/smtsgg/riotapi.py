@@ -14,13 +14,33 @@ def get_puuid(userName, tagLine):
     query_url = "/".join([API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-riot-id/{userName}/{tagLine}"])
 
     response = requests.get(query_url, headers=conf.header_content)
+    print(response.status_code)
     if response.status_code == 200:
         return response.json()["puuid"]
     elif response.status_code == 404:  # user not existed
         raise KeyError("Username and tag not found")
     else:  # API error or else
         raise Exception("Unknown Error")
-    
+
+def get_riot_id_from_puuid(puuid):
+    query_url = "/".join([API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-puuid/{puuid}"])
+    response = requests.get(query_url, headers=conf.header_content)
+
+    if response.status_code == 200:
+        return (response.json()["gameName"], response.json()["tagLine"])
+    else:
+        return tuple()
+
+def get_puuid_from_summoner_id(summid):
+    query_url = "/".join([API_BASE_URL_ASIA, f"lol/summoner/v4/summoners/{summid}"])
+    response = requests.get(query_url, headers=conf.header_content)
+
+    if response.status_code == 200:
+        return response.json()["puuid"]
+    else:
+        return ""
+
+
 def get_summoner_id_encrypted(puuid):
     query_url = "/".join([API_BASE_URL_KR, f"lol/summoner/v4/summoners/by-puuid/{puuid}"])
 
@@ -31,7 +51,7 @@ def get_summoner_id_encrypted(puuid):
     else:
         return ""
 
-    
+
 def get_match_ids(puuid):
 
     query_url = "/".join([API_BASE_URL_ASIA, f"lol/match/v5/matches/by-puuid/{puuid}/ids"])
@@ -103,9 +123,9 @@ def get_champion_mastery(puuid):
         return infos_used
     else:
         return None
-    
-def get_rank_info(summid):
-    query_url = "/".join([API_BASE_URL_KR, f"lol/league/v4/entries/by-summoner/{summid}"])
+
+def get_rank_info(puuid):
+    query_url = "/".join([API_BASE_URL_KR, f"lol/league/v4/entries/by-puuid/{puuid}"])
 
     response = requests.get(query_url, headers=conf.header_content)
 
