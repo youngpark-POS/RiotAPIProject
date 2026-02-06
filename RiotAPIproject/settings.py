@@ -18,28 +18,15 @@ from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEBUG = os.environ.get('DEBUG') == '1'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-secret_json = os.path.join(BASE_DIR, "secret.json")
 
-with open(secret_json) as f:
-    secrets = json.loads(f.read())
-
-
-def get_secret(setting, secrets=secrets):
-    try:
-        return secrets[setting]
-    except KeyError:
-        raise ImproperlyConfigured(f"{setting} is not in env_variable")
-
-
-SECRET_KEY = get_secret("SECRET_KEY")
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-
-DEBUG = False
 
 ALLOWED_HOSTS = ["*", ".pythonanswhere.com"]
 
