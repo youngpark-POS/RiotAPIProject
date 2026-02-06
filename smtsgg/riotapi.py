@@ -1,14 +1,19 @@
 import os
 import requests
 import json
+import time
 from datetime import datetime as dt
 from . import config as conf
 
 from pprint import pprint
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 API_BASE_URL_KR = "https://kr.api.riotgames.com"
 API_BASE_URL_ASIA = "https://asia.api.riotgames.com"
 
+# @api_key_expire_check
 def get_puuid(userName, tagLine):
 
     query_url = "/".join([API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-riot-id/{userName}/{tagLine}"])
@@ -40,7 +45,6 @@ def get_puuid_from_summoner_id(summid):
     else:
         return ""
 
-
 def get_summoner_id_encrypted(puuid):
     query_url = "/".join([API_BASE_URL_KR, f"lol/summoner/v4/summoners/by-puuid/{puuid}"])
 
@@ -50,7 +54,6 @@ def get_summoner_id_encrypted(puuid):
         return response.json()["id"]
     else:
         return ""
-
 
 def get_match_ids(puuid):
 
