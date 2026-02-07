@@ -1,6 +1,7 @@
 # LoL match history website using RiotAPI
 
-you can check out my site at https://youngpark.pythonanywhere.com/
+AWS EC2 hosted app: http://13.125.14.44 (not always active due to the EC2 cost issue)
+pythonanywhere: https://youngpark.pythonanywhere.com/
 
 Caution! This website supports only for "KR server".  
-Please look forward tdo the further updates!
+Please look forward to the further updates!
