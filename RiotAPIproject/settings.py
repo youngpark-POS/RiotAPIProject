@@ -23,12 +23,18 @@ DEBUG = os.environ.get('DEBUG') == '1'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
+def get_env_variable(var_name):
+    try:
+        return os.environ.get(var_name)
+    except KeyError:
+        error_msg = "Environment variable {} is not set".format(var_name)
+        raise ImproperlyConfigured(error_msg)
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = get_env_variable("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ["*", ".pythonanswhere.com"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
