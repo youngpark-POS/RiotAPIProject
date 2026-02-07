@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+import time
 from datetime import datetime as dt
 from . import config as conf
 
@@ -9,9 +10,13 @@ from pprint import pprint
 API_BASE_URL_KR = "https://kr.api.riotgames.com"
 API_BASE_URL_ASIA = "https://asia.api.riotgames.com"
 
+
+# @api_key_expire_check
 def get_puuid(userName, tagLine):
 
-    query_url = "/".join([API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-riot-id/{userName}/{tagLine}"])
+    query_url = "/".join(
+        [API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-riot-id/{userName}/{tagLine}"]
+    )
 
     response = requests.get(query_url, headers=conf.header_content)
     print(response.status_code)
@@ -22,14 +27,18 @@ def get_puuid(userName, tagLine):
     else:  # API error or else
         raise Exception("Unknown Error")
 
+
 def get_riot_id_from_puuid(puuid):
-    query_url = "/".join([API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-puuid/{puuid}"])
+    query_url = "/".join(
+        [API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-puuid/{puuid}"]
+    )
     response = requests.get(query_url, headers=conf.header_content)
 
     if response.status_code == 200:
         return (response.json()["gameName"], response.json()["tagLine"])
     else:
         return tuple()
+
 
 def get_puuid_from_summoner_id(summid):
     query_url = "/".join([API_BASE_URL_ASIA, f"lol/summoner/v4/summoners/{summid}"])
@@ -42,7 +51,9 @@ def get_puuid_from_summoner_id(summid):
 
 
 def get_summoner_id_encrypted(puuid):
-    query_url = "/".join([API_BASE_URL_KR, f"lol/summoner/v4/summoners/by-puuid/{puuid}"])
+    query_url = "/".join(
+        [API_BASE_URL_KR, f"lol/summoner/v4/summoners/by-puuid/{puuid}"]
+    )
 
     response = requests.get(query_url, headers=conf.header_content)
 
@@ -54,7 +65,9 @@ def get_summoner_id_encrypted(puuid):
 
 def get_match_ids(puuid):
 
-    query_url = "/".join([API_BASE_URL_ASIA, f"lol/match/v5/matches/by-puuid/{puuid}/ids"])
+    query_url = "/".join(
+        [API_BASE_URL_ASIA, f"lol/match/v5/matches/by-puuid/{puuid}/ids"]
+    )
 
     response = requests.get(query_url, headers=conf.header_content)
 
@@ -62,6 +75,7 @@ def get_match_ids(puuid):
         return response.json()
     else:
         return None
+
 
 #  returns match information given match ID and puuid
 def get_match_for_single_player(match_id, puuid):
@@ -79,7 +93,9 @@ def get_match_for_single_player(match_id, puuid):
         infos_used = {
             "matchId": minfo["metadata"]["matchId"],
             "game_duration": minfo["info"]["gameDuration"],
-            "game_endtime": dt.fromtimestamp(minfo["info"]["gameEndTimestamp"] / 1000).strftime("%Y/%m/%d %H:%M:%S"),
+            "game_endtime": dt.fromtimestamp(
+                minfo["info"]["gameEndTimestamp"] / 1000
+            ).strftime("%Y/%m/%d %H:%M:%S"),
             "mapId": minfo["info"]["mapId"],
             "gameMode": minfo["info"]["gameMode"],
             "kills": target_player["kills"],
@@ -102,16 +118,26 @@ def get_match_for_single_player(match_id, puuid):
         }
     return infos_used
 
+
 #  returns the list of top 5 champion mastery
 def get_champion_mastery(puuid):
 
-    query_url = "/".join([API_BASE_URL_KR, f"lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}/top?count=5"])
+    query_url = "/".join(
+        [
+            API_BASE_URL_KR,
+            f"lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}/top?count=5",
+        ]
+    )
 
     response = requests.get(query_url, headers=conf.header_content)
 
     if response.status_code == 200:
         infos_used = []
-        with open(os.path.join(os.path.dirname(__file__), "static", "champ_id2name.json"), "r", encoding="utf-8") as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "static", "champ_id2name.json"),
+            "r",
+            encoding="utf-8",
+        ) as f:
             id2name_dict = json.load(f)
             for mst in response.json():
                 single_mastery = {
@@ -124,22 +150,15 @@ def get_champion_mastery(puuid):
     else:
         return None
 
+
 def get_rank_info(puuid):
     query_url = "/".join([API_BASE_URL_KR, f"lol/league/v4/entries/by-puuid/{puuid}"])
 
     response = requests.get(query_url, headers=conf.header_content)
 
     infos = {
-        "solo": {
-            "tier": "Unranked",
-            "rank": "",
-            "leaguePoints": 0
-        },
-        "flex": {
-            "tier": "Unranked",
-            "rank": "",
-            "leaguePoints": 0
-        },
+        "solo": {"tier": "Unranked", "rank": "", "leaguePoints": 0},
+        "flex": {"tier": "Unranked", "rank": "", "leaguePoints": 0},
     }
 
     if response.status_code == 200:
@@ -149,16 +168,21 @@ def get_rank_info(puuid):
                 infos["solo"] = {
                     "tier": league["tier"],
                     "rank": league["rank"],
-                    "leaguePoints": "" if league["tier"] == "Unranked" else league["leaguePoints"]
+                    "leaguePoints": (
+                        "" if league["tier"] == "Unranked" else league["leaguePoints"]
+                    ),
                 }
             elif "5x5" in league["queueType"]:
                 infos["flex"] = {
                     "tier": league["tier"],
                     "rank": league["rank"],
-                    "leaguePoints": "" if league["tier"] == "Unranked" else league["leaguePoints"]
+                    "leaguePoints": (
+                        "" if league["tier"] == "Unranked" else league["leaguePoints"]
+                    ),
                 }
 
     return infos
+
 
 def get_match_detail(match_id):
     query_url = "/".join([API_BASE_URL_ASIA, f"lol/match/v5/matches/{match_id}"])
@@ -170,14 +194,16 @@ def get_match_detail(match_id):
 
         game_info = {
             "game_duration": minfo["info"]["gameDuration"],
-            "game_endtime": dt.fromtimestamp(minfo["info"]["gameEndTimestamp"] / 1000).strftime("%Y/%m/%d %H:%M:%S"),
+            "game_endtime": dt.fromtimestamp(
+                minfo["info"]["gameEndTimestamp"] / 1000
+            ).strftime("%Y/%m/%d %H:%M:%S"),
             "mapId": minfo["info"]["mapId"],
             "gameMode": minfo["info"]["gameMode"],
         }
 
         lane2idx = {"top": 0, "jgl": 1, "mid": 2, "bot": 3, "sup": 4}
-        winning_team = [None*5]
-        losing_team = [None*5]
+        winning_team = [None * 5]
+        losing_team = [None * 5]
         for player in minfo["info"]["participants"]:
             target_dict = winning_team if player["win"] else losing_team
             target_dict[lane2idx[player["lane"]]] = {
