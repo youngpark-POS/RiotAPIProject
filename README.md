@@ -1,6 +1,6 @@
 # LoL match history website using RiotAPI
 
-AWS EC2 hosted app: http://13.125.14.44 (not always active due to the EC2 cost issue)
+AWS EC2 hosted app: http://13.125.14.44 (active during UTC+9(Seoul) 09:00 - 17:00)
 
 pythonanywhere: https://youngpark.pythonanywhere.com/
 
