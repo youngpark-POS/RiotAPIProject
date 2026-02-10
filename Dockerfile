@@ -1,12 +1,13 @@
 FROM python:3.10-slim
 
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:latest /lambda-adapter /opt/extensions/lambda-adapter
+
 WORKDIR /app
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+COPY requirements.txt .
+RUN python -m pip install --upgrade pip && python -m pip install --no-cache-dir -r requirements.txt
 
-COPY requirements.txt /app/
-RUN python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+COPY . .
 
-COPY . /app/
+ENV PORT=8000
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "RiotAPIproject.wsgi:application"]

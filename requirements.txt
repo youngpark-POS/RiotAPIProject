@@ -2,3 +2,7 @@ django>=5.0,<6.0
 gunicorn
 requests
 python-dotenv
+django-storages
+boto3
+dj-database-url
+psycopg2-binary
