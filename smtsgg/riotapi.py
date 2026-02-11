@@ -18,6 +18,11 @@ header_content = {
 }
 
 
+def request_with_header(query_url):
+    response = requests.get(query_url, headers=header_content)
+    return response
+
+
 # @api_key_expire_check
 def get_puuid(userName, tagLine):
 
@@ -25,7 +30,7 @@ def get_puuid(userName, tagLine):
         [API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-riot-id/{userName}/{tagLine}"]
     )
 
-    response = requests.get(query_url, headers=header_content)
+    response = request_with_header(query_url)
     print(response.status_code)
     if response.status_code == 200:
         return response.json()["puuid"]
@@ -39,7 +44,7 @@ def get_riot_id_from_puuid(puuid):
     query_url = "/".join(
         [API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-puuid/{puuid}"]
     )
-    response = requests.get(query_url, headers=header_content)
+    response = request_with_header(query_url)
 
     if response.status_code == 200:
         return (response.json()["gameName"], response.json()["tagLine"])
@@ -49,7 +54,7 @@ def get_riot_id_from_puuid(puuid):
 
 def get_puuid_from_summoner_id(summid):
     query_url = "/".join([API_BASE_URL_ASIA, f"lol/summoner/v4/summoners/{summid}"])
-    response = requests.get(query_url, headers=header_content)
+    response = request_with_header(query_url)
 
     if response.status_code == 200:
         return response.json()["puuid"]
@@ -62,7 +67,7 @@ def get_summoner_id_encrypted(puuid):
         [API_BASE_URL_KR, f"lol/summoner/v4/summoners/by-puuid/{puuid}"]
     )
 
-    response = requests.get(query_url, headers=header_content)
+    response = request_with_header(query_url)
 
     if response.status_code == 200:
         return response.json()["id"]
@@ -76,7 +81,7 @@ def get_match_ids(puuid):
         [API_BASE_URL_ASIA, f"lol/match/v5/matches/by-puuid/{puuid}/ids"]
     )
 
-    response = requests.get(query_url, headers=header_content)
+    response = request_with_header(query_url)
 
     if response.status_code == 200:
         return response.json()
@@ -89,7 +94,7 @@ def get_match_for_single_player(match_id, puuid):
 
     query_url = "/".join([API_BASE_URL_ASIA, f"lol/match/v5/matches/{match_id}"])
 
-    response = requests.get(query_url, headers=header_content)
+    response = request_with_header(query_url)
 
     if response.status_code == 200:
         minfo = response.json()
@@ -136,7 +141,7 @@ def get_champion_mastery(puuid):
         ]
     )
 
-    response = requests.get(query_url, headers=conf.header_content)
+    response = request_with_header(query_url)
 
     if response.status_code == 200:
         infos_used = []
@@ -161,7 +166,7 @@ def get_champion_mastery(puuid):
 def get_rank_info(puuid):
     query_url = "/".join([API_BASE_URL_KR, f"lol/league/v4/entries/by-puuid/{puuid}"])
 
-    response = requests.get(query_url, headers=conf.header_content)
+    response = request_with_header(query_url)
 
     infos = {
         "solo": {"tier": "Unranked", "rank": "", "leaguePoints": 0},
@@ -194,7 +199,7 @@ def get_rank_info(puuid):
 def get_match_detail(match_id):
     query_url = "/".join([API_BASE_URL_ASIA, f"lol/match/v5/matches/{match_id}"])
 
-    response = requests.get(query_url, headers=conf.header_content)
+    response = request_with_header(query_url)
 
     if response.status_code == 200:
         minfo = response.json()
