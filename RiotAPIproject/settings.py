@@ -90,7 +90,8 @@ WSGI_APPLICATION = "RiotAPIproject.wsgi.application"
 
 DATABASES = {
     "default": dj_database_url.config(
-        get_env_variable("DATABASE_URL"), default="sqlite:///db.sqlite3"
+        default="sqlite:///db.sqlite3",
+        conn_max_age=600,
     )
 }
 
@@ -128,8 +129,6 @@ USE_TZ = True
 
 # Storages & Static files
 
-AWS_ACCESS_KEY_ID = get_env_variable("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = get_env_variable("AWS_SECRET_ACCESS_KEY")
 AWS_REGION_NAME = "ap-northeast-2"
 AWS_STORAGE_BUCKET_NAME = "s3-staticfiles-riotapi-project"
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
