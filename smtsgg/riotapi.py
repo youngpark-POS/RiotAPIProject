@@ -3,12 +3,19 @@ import requests
 import json
 import time
 from datetime import datetime as dt
-from . import config as conf
 
 from pprint import pprint
 
 API_BASE_URL_KR = "https://kr.api.riotgames.com"
 API_BASE_URL_ASIA = "https://asia.api.riotgames.com"
+
+header_content = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36",
+    "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+    "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+    "Origin": "https://developer.riotgames.com",
+    "X-Riot-Token": os.environ.get("RIOT_API_KEY"),
+}
 
 
 # @api_key_expire_check
@@ -18,7 +25,7 @@ def get_puuid(userName, tagLine):
         [API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-riot-id/{userName}/{tagLine}"]
     )
 
-    response = requests.get(query_url, headers=conf.header_content)
+    response = requests.get(query_url, headers=header_content)
     print(response.status_code)
     if response.status_code == 200:
         return response.json()["puuid"]
@@ -32,7 +39,7 @@ def get_riot_id_from_puuid(puuid):
     query_url = "/".join(
         [API_BASE_URL_ASIA, f"riot/account/v1/accounts/by-puuid/{puuid}"]
     )
-    response = requests.get(query_url, headers=conf.header_content)
+    response = requests.get(query_url, headers=header_content)
 
     if response.status_code == 200:
         return (response.json()["gameName"], response.json()["tagLine"])
@@ -42,7 +49,7 @@ def get_riot_id_from_puuid(puuid):
 
 def get_puuid_from_summoner_id(summid):
     query_url = "/".join([API_BASE_URL_ASIA, f"lol/summoner/v4/summoners/{summid}"])
-    response = requests.get(query_url, headers=conf.header_content)
+    response = requests.get(query_url, headers=header_content)
 
     if response.status_code == 200:
         return response.json()["puuid"]
@@ -55,7 +62,7 @@ def get_summoner_id_encrypted(puuid):
         [API_BASE_URL_KR, f"lol/summoner/v4/summoners/by-puuid/{puuid}"]
     )
 
-    response = requests.get(query_url, headers=conf.header_content)
+    response = requests.get(query_url, headers=header_content)
 
     if response.status_code == 200:
         return response.json()["id"]
@@ -69,7 +76,7 @@ def get_match_ids(puuid):
         [API_BASE_URL_ASIA, f"lol/match/v5/matches/by-puuid/{puuid}/ids"]
     )
 
-    response = requests.get(query_url, headers=conf.header_content)
+    response = requests.get(query_url, headers=header_content)
 
     if response.status_code == 200:
         return response.json()
@@ -82,7 +89,7 @@ def get_match_for_single_player(match_id, puuid):
 
     query_url = "/".join([API_BASE_URL_ASIA, f"lol/match/v5/matches/{match_id}"])
 
-    response = requests.get(query_url, headers=conf.header_content)
+    response = requests.get(query_url, headers=header_content)
 
     if response.status_code == 200:
         minfo = response.json()
