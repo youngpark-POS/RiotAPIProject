@@ -1,8 +1,5 @@
 <!doctype html>
 <html lang="en">
-
-
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -124,7 +121,9 @@
                     </thead>
                     <tbody>
                         {% for match in match_list %}
-                        <tr onclick=rdct({% url "smtsgg:match_detail" match.matchId %}) style=cursor.hand>
+                        {% comment %} <tr onclick=rdct({% url "smtsgg:match_detail" match.matchId %}) style=cursor.hand>
+                         {% endcomment %}
+                        <tr>
                             <td><img src={% static "champion_portrait/"|add:match.champion|add:".png"  %} class="champion-img" alt={{ match.champion }}></td>
                             <td>{{ match.gameMode }}</td>
                             <td>{{ match.game_endtime }}</td>
